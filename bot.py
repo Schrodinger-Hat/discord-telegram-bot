@@ -6,7 +6,7 @@ Python version used: Python3
 NOTE: Please don't mess with code if you don't understand what you are doing.
 '''
 
-import conf as config 
+import os
 import socks 
 import discord
 from discord import errors
@@ -17,8 +17,24 @@ import logging
 from box import Box as box
 from colorama import Back, Fore, init, Style
 from aiohttp import client_exceptions as clientExcps
+from dotenv import load_dotenv
+load_dotenv()
 
 init(autoreset=True)
+
+# Lines 26-37 have been added to mimic the use of the conf.py in the form of env variables
+class Config:
+    USER_DISCORD_TOKEN = os.getenv("USER_DISCORD_TOKEN")
+    TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+    TELEGRAM_RECEIVER_CHAT_ID = os.getenv("TELEGRAM_RECEIVER_CHAT_ID")
+    PROXY = False
+    serversList = {
+        "Schrödinger Hat": [
+            "general-contributors",
+        ]
+    }
+
+config = Config()
 
 colorSchemes = {
     'SUCCESS': f"{Back.GREEN}{Fore.BLACK}{Style.NORMAL}",
@@ -32,7 +48,11 @@ logging.basicConfig(format=f'{colorSchemes.FAILURE}[%(levelname) 5s/%(asctime)s]
 
 
 
-bot = discord.Client()
+intents = discord.Intents.default()
+intents.message_content = True
+
+
+bot = discord.Client(intents=intents)
 baseUrl = f"https://api.telegram.org/bot{config.TELEGRAM_BOT_TOKEN}"
 
 
@@ -199,7 +219,7 @@ async def on_message(message):
 
 #Run the bot using the user token
 try:
-    bot.run(config.USER_DISCORD_TOKEN, bot=False)
+    bot.run(config.USER_DISCORD_TOKEN)
 except RuntimeError:
     print("\n\nPlease Wait ...\nShutting down the bot ... \n")
     quit()
