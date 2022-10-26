@@ -4,3 +4,4 @@ requests
 requests[socks]
 python-box
 colorama
+python-dotenv
