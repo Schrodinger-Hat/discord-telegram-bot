@@ -78,7 +78,7 @@ def replaceMentions(mentions, msg, channel):
 def removeTags(msg):
     msg = re.sub(r"@\w*", '', msg)
     msg = requests.utils.quote(msg)
-    #print(f"{colorSchemes.SUCCESS}Quoted message: {msg}")
+    print(f"{colorSchemes.SUCCESS}Quoted message: {msg}")
     return msg
 
 
@@ -164,17 +164,17 @@ async def on_message(message):
         channelName = message.channel.name
     except AttributeError:
         pass
-    #print(f"Server: {serverName}, Channel: {channelName}")
+    print(f"Server: {serverName}, Channel: {channelName}")
     if serverName in serversList:
         channelsList = config.serversList[serverName]
         if matchChannel(channelName, channelsList):
             print(f"\n-------------------------------------------\n[+] Channel: {channelName}")
             if message.content:
                 if message.mentions:
-                    # print(f"\n----------------\nUser Mentioned\n----------------")
+                    print(f"\n----------------\nUser Mentioned\n----------------")
                     message.content = replaceMentions(message.mentions, message.content, channel=False)
                 if message.channel_mentions:
-                    # print(f"\n----------------\nChannel Mentioned\n----------------")
+                    print(f"\n----------------\nChannel Mentioned\n----------------")
                     message.content = replaceMentions(message.channel_mentions, message.content, channel=True)
                 toSend = f"{message.guild}/{message.channel}/{message.author.name}: {message.content}"
                 print(f"[+] Message: {toSend}")
@@ -209,7 +209,7 @@ async def on_message(message):
                         toSend = removeTags(toSend)
                     url = f"{baseUrl}/sendMessage?text={toSend}&chat_id={config.TELEGRAM_RECEIVER_CHAT_ID}"
                     sendMsg(url)
-                    # print(embed)
+                    print(embed)
                 elif str(embed['type']) == "link":
                     toSend = f"{embed['title']}\n{embed['description']}\n{embed['url']}"
                     toSend = removeTags(toSend)
